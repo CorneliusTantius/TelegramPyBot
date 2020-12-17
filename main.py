@@ -10,6 +10,17 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 TOKEN = '1425460282:AAGHnd__02UAKvnNC3estkF6Rv8MEbpi8fI'
+mainHandler = MainHandler()
+
+def start(update, context):
+    update.message.reply_text('Hi!')
+
+def help(update, context):
+    update.message.reply_text('Help!')
+
+def echo(update, context):
+    retval = mainHandler.checkQuery(update.message.text)
+    update.message.reply_text(retval)
 
 def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
@@ -20,10 +31,9 @@ def main():
 
     dp = updater.dispatcher
 
-    dp.add_handler(CommandHandler("start", mh.start))
-    dp.add_handler(CommandHandler("help", mh.help))
-    dp.add_handler(CommandHandler("about", mh.help))
-    dp.add_handler(MessageHandler(Filters.text, mh.echo))
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("help", help))
+    dp.add_handler(MessageHandler(Filters.text, echo))
     dp.add_error_handler(error)
 
     updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path=TOKEN)
